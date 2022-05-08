@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "365640415580",
+    "project_id": "kanlane-67d29",
+    "storage_bucket": "kanlane-67d29.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:365640415580:android:82494cc1f7c702be47a999",
+        "android_client_info": {
+          "package_name": "com.example.kanlane"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "365640415580-umegvc2jtpk0bdjss05ka784hlvi31dg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGd2I3bpLO2tVfdXa5GmO7UvgyTiMPSIo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "365640415580-umegvc2jtpk0bdjss05ka784hlvi31dg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

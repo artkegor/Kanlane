@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Kanlane</string>
+    <string name="undermain">С заботой о старших.</string>
+    <string name="name_reg">Введите ваше имя…</string>
+    <string name="email_reg_and_login">Введите вашу почту…</string>
+    <string name="password_reg">Придумайте пароль…</string>
+    <string name="register_btn">Регистрация</string>
+    <string name="login_mainscreen">Уже зарегистрированы? Войти.</string>
+    <string name="login_btn">Войти</string>
+    <string name="login_password">Введите пароль</string>
+    <string name="registrarion_login_screen">Еще не зарегистрированы? Зарегестрироваться.</string>
+
+
+
+
+
+
+
+</resources>
