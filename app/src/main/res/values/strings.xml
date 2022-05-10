@@ -7,8 +7,10 @@
     <string name="register_btn">Регистрация</string>
     <string name="login_mainscreen">Уже зарегистрированы? Войти.</string>
     <string name="login_btn">Войти</string>
-    <string name="login_password">Введите пароль</string>
-    <string name="registrarion_login_screen">Еще не зарегистрированы? Зарегестрироваться.</string>
+    <string name="registrarion_login_screen">Впервые здесь? Зарегистрироваться.</string>
+    <string name="logout_btn">Выйти</string>
+    <string name="login_password">Введите пароль…</string>
+    <string name="forgot_password">Забыли пароль?</string>
 
 
 

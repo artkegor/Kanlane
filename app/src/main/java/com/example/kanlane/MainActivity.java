@@ -2,6 +2,7 @@ package com.example.kanlane;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,12 +10,15 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class MainActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_main);
         //Для полноэкранного режима и скрывания шапки.
         getSupportActionBar().hide();
         if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
@@ -29,6 +33,13 @@ public class MainActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
 
+
+
+    }
+    public void logout (View view){
+        FirebaseAuth.getInstance().signOut(); //logout
+        startActivity(new Intent(getApplicationContext(), Login.class));
+        finish();
     }
 
     //Для полноэкранного режима и скрывания шапки.
