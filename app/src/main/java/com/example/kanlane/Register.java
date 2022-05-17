@@ -38,11 +38,16 @@ import java.util.Objects;
 
 public class Register extends AppCompatActivity {
     //Переменные
-    EditText mName, mEmail, mPassword;
+    EditText mName, mEmail, mPassword, mUser_bind;
     Button mRegisterBtn;
     TextView mLoginbtn;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
+    String user_data = "User";
+    DatabaseReference mDataBase;
+
+
+
 
 
 
@@ -58,11 +63,15 @@ public class Register extends AppCompatActivity {
         mName = findViewById(R.id.Name);
         mEmail = findViewById(R.id.Email);
         mPassword = findViewById(R.id.Password);
-        mRegisterBtn = findViewById(R.id.register_btn);
+        mUser_bind = findViewById(R.id.user_bind);
         mLoginbtn = findViewById(R.id.login_mainscreen);
+        mRegisterBtn = findViewById(R.id.register_btn);
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
+        mDataBase = FirebaseDatabase.getInstance().getReference(user_data);
+
+
 
 
         if (fAuth.getCurrentUser() != null) {
@@ -77,9 +86,17 @@ public class Register extends AppCompatActivity {
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                String id = mDataBase.getKey();
+                final String name = mName.getText().toString().trim();
                 final String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
-                final String Name = mName.getText().toString();
+                String user_binder = mUser_bind.getText().toString().trim();
+
+                User newUser = new User(id, name, email, password, user_binder);
+                mDataBase.push().setValue(newUser);
+
+
 
                 if(TextUtils.isEmpty(email)){
                     mEmail.setError("Введите почту...");
