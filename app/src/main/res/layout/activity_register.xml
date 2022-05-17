@@ -19,9 +19,10 @@
         android:textSize="55sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.523"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.038">
+        app:layout_constraintVertical_bias="0.081">
 
     </TextView>
 
@@ -38,7 +39,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.213">
+        app:layout_constraintVertical_bias="0.243">
 
     </TextView>
 
@@ -58,9 +59,10 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/slogan"
-        app:layout_constraintVertical_bias="0.13999999" />
+        app:layout_constraintVertical_bias="0.211" />
 
     <EditText
         android:id="@+id/Email"
@@ -122,16 +124,15 @@
         android:id="@+id/login_mainscreen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="28dp"
+        android:fontFamily="@font/roboto_bold"
         android:text="@string/login_mainscreen"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/register_btn" >
+        app:layout_constraintTop_toBottomOf="@+id/register_btn">
 
     </TextView>
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

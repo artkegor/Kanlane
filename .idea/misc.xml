@@ -3,9 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/artam/AndroidStudioProjects/Kanlane/app/src/main/res/drawable/oval_button.xml" value="0.1095" />
+        <entry key="..\:/Users/artam/AndroidStudioProjects/Kanlane/app/src/main/res/drawable/round_button.xml" value="0.1095" />
+        <entry key="..\:/Users/artam/AndroidStudioProjects/Kanlane/app/src/main/res/layout/activity_account.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/artam/AndroidStudioProjects/Kanlane/app/src/main/res/layout/activity_login.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/artam/AndroidStudioProjects/Kanlane/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/artam/AndroidStudioProjects/Kanlane/app/src/main/res/layout/activity_register.xml" value="0.2269021739130435" />
+        <entry key="..\:/Users/artam/AndroidStudioProjects/Kanlane/app/src/main/res/layout/rounded_button.xml" value="0.22826086956521738" />
       </map>
     </option>
   </component>
