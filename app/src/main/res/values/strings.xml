@@ -12,6 +12,8 @@
     <string name="login_password">Введите пароль…</string>
     <string name="forgot_password">Забыли пароль?</string>
     <string name="user_bind">Введите почту получателя…</string>
+    <string name="sos_button">SOS</string>
+
 
 
 </resources>

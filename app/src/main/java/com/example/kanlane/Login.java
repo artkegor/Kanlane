@@ -93,6 +93,7 @@ public class Login extends AppCompatActivity {
                         if(task.isSuccessful()){
                             Toast.makeText(Login.this, "Вы вошли в аккаунт.",Toast.LENGTH_LONG).show();
                             startActivity(new Intent(getApplicationContext(),MainActivity.class));
+
                         }else{
                             Toast.makeText(Login.this, "Произошла ошибка. Повторите." + task.getException().getMessage(),Toast.LENGTH_LONG).show();
                         }
