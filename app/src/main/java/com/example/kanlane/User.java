@@ -17,6 +17,12 @@ public class User {
 
 
     }
+    public String get_my_email(){
+        return this.email;
+    }
+    public String get_my_user_binder(){
+        return this.user_binder;
+    }
 
 
 }

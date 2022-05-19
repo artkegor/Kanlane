@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -70,6 +71,8 @@ public class Register extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         mDataBase = FirebaseDatabase.getInstance().getReference(user_data);
+
+
 
 
 
@@ -170,4 +173,7 @@ public class Register extends AppCompatActivity {
         }
         win.setAttributes(winParams);
     }
+
+
+
 }

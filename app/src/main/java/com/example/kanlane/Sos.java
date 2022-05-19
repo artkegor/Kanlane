@@ -3,11 +3,11 @@ import java.util.Date;
 
 
 public class Sos {
-    public String emailto;
-    public String emailfrom;
+    public User emailto;
+    public User emailfrom;
     public long time;
 
-    public Sos(String emailto, String emailfrom){
+    public Sos(User emailto, User emailfrom){
         this.emailto = emailto;
         this.emailfrom = emailfrom;
         this.time = System.currentTimeMillis();
