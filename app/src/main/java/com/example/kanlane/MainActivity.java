@@ -2,65 +2,83 @@ package com.example.kanlane;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.util.Log;
+import android.widget.Toast;
+
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
+
     Button mAccountBtn;
     Button mSosButton;
     DatabaseReference databaseReference;
-    User main_email;
-    User binder_email;
-    String email;
-    String email_binder;
+    public String emailFrom, emailTo;
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+    DatabaseReference mDataBase;
+    String userData = "User";
+    String currentUser;
 
-
-
-
-
+    //EmailTo это Email
+    //EmailFrom это UserBinder
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAccountBtn = findViewById(R.id.account_btn);
-        mSosButton = findViewById(R.id.sos_button);
+        currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-
-    String email = main_email.get_my_email();
-    String email_binder = binder_email.get_my_user_binder();
-
-
-
+        //Базы данных
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        mDataBase = FirebaseDatabase.getInstance().getReference(userData);
+        mAccountBtn = findViewById(R.id.accountBtn);
+        mSosButton = findViewById(R.id.sosButton);
 
 
         mSosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("sos");
-                Sos sos = new Sos(main_email, binder_email);
+
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+                        .getReference().child("Sos");
+                Toast.makeText(MainActivity.this, "Сообщение отправлено!", Toast.LENGTH_LONG).show();
+
+                Sos sos = new Sos(null, null);
+
                 databaseReference.push().setValue(sos);
 
 
             }
         });
-
 
         mAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,15 +103,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
     }
-
-
-
-
-
-
-
 
     //Для полноэкранного режима и скрывания шапки.
     public static void setWindowFlag(AppCompatActivity activity, final int bits, boolean on) {

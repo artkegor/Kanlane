@@ -1,17 +1,21 @@
 package com.example.kanlane;
+import android.database.Cursor;
+
 import java.util.Date;
 
 
 public class Sos {
-    public User emailto;
-    public User emailfrom;
+    public String emailTo;
+    public String emailFrom;
     public long time;
 
-    public Sos(User emailto, User emailfrom){
-        this.emailto = emailto;
-        this.emailfrom = emailfrom;
+    public Sos(){}
+
+    public Sos(String emailFrom, String emailTo){
+        this.emailTo = emailTo;
+        this.emailFrom = emailFrom;
         this.time = System.currentTimeMillis();
-
-
     }
+
+
 }

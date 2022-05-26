@@ -4,7 +4,12 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,23 +38,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.lang.reflect.Array;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
 public class Register extends AppCompatActivity {
     //Переменные
-    EditText mName, mEmail, mPassword, mUser_bind;
+    EditText mName, mEmail, mPassword, mUserBinder;
     Button mRegisterBtn;
     TextView mLoginbtn;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
-    String user_data = "User";
+    String userData = "User";
     DatabaseReference mDataBase;
-
-
-
-
+    String currentUser;
 
 
 
@@ -58,23 +61,19 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-
-
         //Переменные.
         mName = findViewById(R.id.Name);
         mEmail = findViewById(R.id.Email);
         mPassword = findViewById(R.id.Password);
-        mUser_bind = findViewById(R.id.user_bind);
-        mLoginbtn = findViewById(R.id.login_mainscreen);
-        mRegisterBtn = findViewById(R.id.register_btn);
+        mUserBinder = findViewById(R.id.userBinder);
+        mLoginbtn = findViewById(R.id.loginMainscreen);
+        mRegisterBtn = findViewById(R.id.registerBtn);
 
+
+        //Базы данных
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
-        mDataBase = FirebaseDatabase.getInstance().getReference(user_data);
-
-
-
-
+        mDataBase = FirebaseDatabase.getInstance().getReference(userData);
 
 
         if (fAuth.getCurrentUser() != null) {
@@ -83,63 +82,68 @@ public class Register extends AppCompatActivity {
         }
 
 
-
-
         //Кнопка регистрации.
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                //Переменные для регистрации
                 String id = mDataBase.getKey();
-                final String name = mName.getText().toString().trim();
-                final String email = mEmail.getText().toString().trim();
+                String name = mName.getText().toString().trim();
+                String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
-                String user_binder = mUser_bind.getText().toString().trim();
+                String userBinder = mUserBinder.getText().toString().trim();
 
-                User newUser = new User(id, name, email, password, user_binder);
-                mDataBase.push().setValue(newUser);
-
-
-
-                if(TextUtils.isEmpty(email)){
+                //Проверка условий регистрации
+                if (TextUtils.isEmpty(email)) {
                     mEmail.setError("Введите почту...");
                     return;
                 }
-
-                if(TextUtils.isEmpty(password)){
+                if (TextUtils.isEmpty(password)) {
                     mEmail.setError("Введите пароль...");
                     return;
                 }
-
-                if(password.length() < 8 ){
+                if (password.length() < 8) {
                     mPassword.setError("Пароль должен состоять из 8-ми символов.");
                     return;
                 }
 
-
-
                 //Регистрация пользователя.
                 fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
+
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(Register.this, "Пользователь зарегистрирован.",Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
-                        }else{
-                            Toast.makeText(Register.this, "Произошла ошибка. Повторите." + task.getException().getMessage(),Toast.LENGTH_LONG).show();
+                        if (task.isSuccessful()) {
+
+                            currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            User newUser = new User(currentUser, id, name, email, password, userBinder);
+                            mDataBase.push().setValue(newUser);
+
+                            Toast.makeText(Register.this, "Пользователь зарегистрирован.", Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
+
+                        } else {
+                            Toast.makeText(Register.this, "Произошла ошибка. Повторите." +
+                                    task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
 
+
+
+
+
+
             }
         });
+
         mLoginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(),Login.class));
             }
         });
-
 
         //Скрывает ненужные панели.
         getSupportActionBar().hide();
@@ -154,14 +158,8 @@ public class Register extends AppCompatActivity {
             setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
-
-
-
-
-
-
-
     }
+
     //Скрывает ненужные панели.
     public static void setWindowFlag (AppCompatActivity activity,final int bits, boolean on){
         Window win = activity.getWindow();
@@ -173,7 +171,6 @@ public class Register extends AppCompatActivity {
         }
         win.setAttributes(winParams);
     }
-
 
 
 }

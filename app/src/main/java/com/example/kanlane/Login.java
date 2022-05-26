@@ -28,24 +28,24 @@ import com.google.firebase.auth.FirebaseAuth;
 public class Login extends AppCompatActivity {
 
     EditText mEmail, mPassword;
-    Button mLogin_btn;
-    TextView mRegister_Login_screen;
+    Button mLoginBtn;
+    TextView mRegisterLoginScreen;
     TextView mForgotPassword;
     FirebaseAuth fAuth;
-
-
+    String email, userBinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mEmail = findViewById(R.id.email_login);
-        mPassword = findViewById(R.id.password_login);
+        mEmail = findViewById(R.id.emailLogin);
+        mPassword = findViewById(R.id.passwordLogin);
         fAuth = FirebaseAuth.getInstance();
-        mLogin_btn = findViewById(R.id.login_Btn);
-        mRegister_Login_screen = findViewById(R.id.register_loginscreen);
-        mForgotPassword = findViewById(R.id.forgot_password);
+        mLoginBtn = findViewById(R.id.loginBtn);
+        mRegisterLoginScreen = findViewById(R.id.registerLoginscreen);
+        mForgotPassword = findViewById(R.id.forgotPassword);
+
 
         //Скрывает ненужные панели.
         getSupportActionBar().hide();
@@ -63,12 +63,11 @@ public class Login extends AppCompatActivity {
 
 
         //Кнопка войти.
-        mLogin_btn.setOnClickListener(new View.OnClickListener() {
+        mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
-
 
                 if(TextUtils.isEmpty(email)){
                     mEmail.setError("Введите почту...");
@@ -91,11 +90,13 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
+
                             Toast.makeText(Login.this, "Вы вошли в аккаунт.",Toast.LENGTH_LONG).show();
                             startActivity(new Intent(getApplicationContext(),MainActivity.class));
 
                         }else{
-                            Toast.makeText(Login.this, "Произошла ошибка. Повторите." + task.getException().getMessage(),Toast.LENGTH_LONG).show();
+                            Toast.makeText(Login.this, "Произошла ошибка. Повторите." + task.getException()
+                                    .getMessage(),Toast.LENGTH_LONG).show();
                         }
                         }
 
@@ -103,7 +104,7 @@ public class Login extends AppCompatActivity {
             }
 
         });
-        mRegister_Login_screen.setOnClickListener(new View.OnClickListener() {
+        mRegisterLoginScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), Register.class));

@@ -10,7 +10,7 @@
 
 
     <Button
-        android:id="@+id/account_btn"
+        android:id="@+id/accountBtn"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:background="@drawable/round_button"
@@ -23,7 +23,7 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
     <Button
-        android:id="@+id/sos_button"
+        android:id="@+id/sosButton"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_marginTop="608dp"
