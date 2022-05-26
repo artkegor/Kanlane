@@ -54,7 +54,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        //Для полноэкранного режима и скрывания шапки.
+        getSupportActionBar().hide();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
         //Базы данных
         fAuth = FirebaseAuth.getInstance();
@@ -62,8 +64,9 @@ public class MainActivity extends AppCompatActivity {
         mDataBase = FirebaseDatabase.getInstance().getReference(userData);
         mAccountBtn = findViewById(R.id.accountBtn);
         mSosButton = findViewById(R.id.sosButton);
+        currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-
+        //Кнопка SOS
         mSosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Кнопка настроек аккаунта (переход в Account.activity)
         mAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,34 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        //Для полноэкранного режима и скрывания шапки.
-        getSupportActionBar().hide();
-        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
-            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
-        }
-        if (Build.VERSION.SDK_INT >= 19) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        }
-
-        if (Build.VERSION.SDK_INT >= 21) {
-            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }
-
-
-    }
-
-    //Для полноэкранного режима и скрывания шапки.
-    public static void setWindowFlag(AppCompatActivity activity, final int bits, boolean on) {
-        Window win = activity.getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
     }
 
 }

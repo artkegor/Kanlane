@@ -39,6 +39,7 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //Переменные
         mEmail = findViewById(R.id.emailLogin);
         mPassword = findViewById(R.id.passwordLogin);
         fAuth = FirebaseAuth.getInstance();
@@ -46,29 +47,18 @@ public class Login extends AppCompatActivity {
         mRegisterLoginScreen = findViewById(R.id.registerLoginscreen);
         mForgotPassword = findViewById(R.id.forgotPassword);
 
-
-        //Скрывает ненужные панели.
+        //Для полноэкранного режима и скрывания шапки
         getSupportActionBar().hide();
-        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
-            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
-        }
-        if (Build.VERSION.SDK_INT >= 19) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        }
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }
-
-
-        //Кнопка войти.
+        //Кнопка войти
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
 
+                //Проверка условий входа в аккаунт
                 if(TextUtils.isEmpty(email)){
                     mEmail.setError("Введите почту...");
                     return;
@@ -84,8 +74,7 @@ public class Login extends AppCompatActivity {
                     return;
                 }
 
-                //Аутентификация пользователя.
-
+                //Аутентификация пользователя
                 fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -104,6 +93,8 @@ public class Login extends AppCompatActivity {
             }
 
         });
+
+        //В случае если пользователь еще не зарегистрирован
         mRegisterLoginScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,6 +103,7 @@ public class Login extends AppCompatActivity {
             }
         });
 
+        //Забыли пароль
         mForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,27 +132,10 @@ public class Login extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
-
-
                 });
                 passwordResetDialog.create().show();
-
-
             }
         });
-
-
-    }
-    public static void setWindowFlag (AppCompatActivity activity,final int bits, boolean on){
-        Window win = activity.getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
-
 
     }
 }

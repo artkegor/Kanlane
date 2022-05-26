@@ -54,14 +54,16 @@ public class Register extends AppCompatActivity {
     DatabaseReference mDataBase;
     String currentUser;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        //Переменные.
+        //Для полноэкранного режима и скрывания шапки
+        getSupportActionBar().hide();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+        //Переменные
         mName = findViewById(R.id.Name);
         mEmail = findViewById(R.id.Email);
         mPassword = findViewById(R.id.Password);
@@ -69,20 +71,17 @@ public class Register extends AppCompatActivity {
         mLoginbtn = findViewById(R.id.loginMainscreen);
         mRegisterBtn = findViewById(R.id.registerBtn);
 
-
         //Базы данных
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         mDataBase = FirebaseDatabase.getInstance().getReference(userData);
-
 
         if (fAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
             finish();
         }
 
-
-        //Кнопка регистрации.
+        //Кнопка регистрации
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,12 +102,16 @@ public class Register extends AppCompatActivity {
                     mEmail.setError("Введите пароль...");
                     return;
                 }
+                if (TextUtils.isEmpty(name)) {
+                    mName.setError("Введите имя...");
+                    return;
+                }
                 if (password.length() < 8) {
                     mPassword.setError("Пароль должен состоять из 8-ми символов.");
                     return;
                 }
 
-                //Регистрация пользователя.
+                //Регистрация пользователя
                 fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
 
@@ -122,55 +125,23 @@ public class Register extends AppCompatActivity {
                             Toast.makeText(Register.this, "Пользователь зарегистрирован.", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
 
-
                         } else {
                             Toast.makeText(Register.this, "Произошла ошибка. Повторите." +
                                     task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
-
-
-
-
-
-
             }
         });
 
+       //В случае, если пользователь зарегистрирован
         mLoginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),Login.class));
+                startActivity(new Intent(getApplicationContext(), Login.class));
             }
         });
 
-        //Скрывает ненужные панели.
-        getSupportActionBar().hide();
-        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
-            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
-        }
-        if (Build.VERSION.SDK_INT >= 19) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        }
-
-        if (Build.VERSION.SDK_INT >= 21) {
-            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }
     }
-
-    //Скрывает ненужные панели.
-    public static void setWindowFlag (AppCompatActivity activity,final int bits, boolean on){
-        Window win = activity.getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
-    }
-
 
 }
