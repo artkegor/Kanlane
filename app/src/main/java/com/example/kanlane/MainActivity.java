@@ -112,7 +112,23 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-    }
 
+        /*private void listenChanges() {
+            FirebaseDatabase listenDatabase = FirebaseDatabase.getInstance("https://chat-app-5b288-default-rtdb.europe-west1.firebasedatabase.app");
+            DatabaseReference reference = listenDatabase.getReference(request);
+
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    dbLog("Data Changed", snapshot.toString());
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    dbLog("DB Error!", getColoredSpanned(error.getMessage(), "#cc0000"));
+                }
+            });
+        }*/
+    }
 
 }

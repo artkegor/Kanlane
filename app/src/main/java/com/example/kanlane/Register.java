@@ -125,7 +125,7 @@ public class Register extends AppCompatActivity {
 
 
                             //Запись нового пользователя в базу данных
-                            User newUser = new User(currentUser, id, name, email, password, userBinder);
+                            User newUser = new User(currentUser, id, name, email, userBinder);
                             currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             writeUserToDB(newUser, currentUser);
 
