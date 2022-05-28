@@ -28,7 +28,7 @@ public class Account extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
 
-        //Для полноэкранного режима и скрывания шапки.
+        //Для полноэкранного режима и скрывания шапки
         getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
@@ -38,7 +38,7 @@ public class Account extends AppCompatActivity {
 
     }
 
-    //Кнопка Выйти.
+    //Кнопка Выйти
     public void logout (View view){
         FirebaseAuth.getInstance().signOut(); //logout
         startActivity(new Intent(getApplicationContext(), Login.class));

@@ -117,8 +117,8 @@ public class Login extends AppCompatActivity {
                 passwordResetDialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String mail_reset = resetmail.getText().toString();
-                        fAuth.sendPasswordResetEmail(mail_reset).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        String mailReset = resetmail.getText().toString();
+                        fAuth.sendPasswordResetEmail(mailReset).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
                                 Toast.makeText(Login.this, "Письмо с инструкцией по сбросу " +
@@ -130,7 +130,6 @@ public class Login extends AppCompatActivity {
                 passwordResetDialog.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                     }
                 });
                 passwordResetDialog.create().show();

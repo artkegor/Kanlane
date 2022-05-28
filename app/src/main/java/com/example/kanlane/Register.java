@@ -50,9 +50,14 @@ public class Register extends AppCompatActivity {
     TextView mLoginbtn;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
-    String userData = "User";
     DatabaseReference mDataBase;
     String currentUser;
+
+    //Метод для записи пользователя в базу данных.
+    public void writeUserToDB(Object data, String currentUser){
+        DatabaseReference myRef = mDataBase.child("Users/" + currentUser);
+        myRef.setValue(data);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +79,7 @@ public class Register extends AppCompatActivity {
         //Базы данных
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
-        mDataBase = FirebaseDatabase.getInstance().getReference(userData);
+        mDataBase = FirebaseDatabase.getInstance().getReference();
 
         if (fAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -99,7 +104,7 @@ public class Register extends AppCompatActivity {
                     return;
                 }
                 if (TextUtils.isEmpty(password)) {
-                    mEmail.setError("Введите пароль...");
+                    mPassword.setError("Введите пароль...");
                     return;
                 }
                 if (TextUtils.isEmpty(name)) {
@@ -118,9 +123,11 @@ public class Register extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 
-                            currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                            //Запись нового пользователя в базу данных
                             User newUser = new User(currentUser, id, name, email, password, userBinder);
-                            mDataBase.push().setValue(newUser);
+                            currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            writeUserToDB(newUser, currentUser);
 
                             Toast.makeText(Register.this, "Пользователь зарегистрирован.", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
