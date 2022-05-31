@@ -1,7 +1,7 @@
-package com.example.kanlane;
+package com.example.kanlane.firebase;
 
 public class User {
-    public String UID, id, name, email, userBinder;
+    public String UID, id, name, email, userBinder, FcmToken;
 
     public User(){}
 

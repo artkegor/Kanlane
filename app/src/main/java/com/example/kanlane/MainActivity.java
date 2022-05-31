@@ -2,65 +2,62 @@ package com.example.kanlane;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-import android.content.ContentValues;
-import android.content.Context;
+import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
-import android.os.Build;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.util.Log;
 import android.widget.Toast;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 
-import java.sql.Array;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
 
+import com.example.kanlane.firebase.Sos;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.api.Authentication;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
     Button mAccountBtn;
     Button mSosButton;
-    DatabaseReference databaseReference;
-    FirebaseUser firebaseUser;
-    public String emailFrom, emailTo;
     FirebaseAuth fAuth;
-    FirebaseFirestore fStore;
     DatabaseReference uidRef, dataBase;
-    String userData = "User";
-    String currentUser;
     String userBinder;
-
-    //EmailTo это Email
-    //EmailFrom это UserBinder
+    String sosMessage;
+    FusedLocationProviderClient fusedLocationProviderClient;
+    double longitude;
+    double latitude;
+    String mLongitude, mLatitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Запрашиваем необходимые нам разрешения
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, 100);
 
         //Для полноэкранного режима и скрывания шапки.
         getSupportActionBar().hide();
@@ -72,35 +69,54 @@ public class MainActivity extends AppCompatActivity {
 
         //Получение данных из базы данных Firebase
         fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String email = user.getEmail();
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         dataBase = FirebaseDatabase.getInstance().getReference();
         uidRef = dataBase.child("Users/").child(uid);
 
+        //Получение из базы данных привязанный номер телефона
         uidRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (task.isSuccessful()) {
                     DataSnapshot snapshot = task.getResult();
                     userBinder = snapshot.child("userBinder").getValue(String.class);
-                }else{
-                        Log.d("TAG", task.getException().getMessage());
-                    }
+                } else {
+                    Log.d("TAG", task.getException().getMessage());
+                }
             }
         });
 
+        //Получение текущей геолокации
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
         //Кнопка SOS
+        sosMessage = email + " попал в беду!\n" + "Широта: " + mLatitude + "\n Долгота: " + mLongitude;
         mSosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED) {
+                    getLocation();
+                } else {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+                }
+
+
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.SEND_SMS) ==
+                        PackageManager.PERMISSION_GRANTED) {
+                    sendSms();
+                } else {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, 100);
+                }
 
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance()
                         .getReference().child("Sos");
-                Toast.makeText(MainActivity.this, "Сообщение отправлено!", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Сообщение отправлено!", Toast.LENGTH_SHORT).show();
                 Sos sos = new Sos(email, userBinder);
                 databaseReference.push().setValue(sos);
+
             }
         });
 
@@ -109,26 +125,49 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), Account.class));
-
             }
         });
 
-        /*private void listenChanges() {
-            FirebaseDatabase listenDatabase = FirebaseDatabase.getInstance("https://chat-app-5b288-default-rtdb.europe-west1.firebasedatabase.app");
-            DatabaseReference reference = listenDatabase.getReference(request);
+    }
 
-            reference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    dbLog("Data Changed", snapshot.toString());
-                }
+    //Метод для полуения текущей геолокации
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
+                (this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                Location location = task.getResult();
+                if (location != null) {
+                    //Создаем GeoCoder
+                    Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                    try {
+                        List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),
+                                location.getLongitude(), 1);
+                        latitude = addresses.get(0).getLatitude();
+                        longitude = addresses.get(0).getLongitude();
+                        mLatitude = Double.toString(latitude);
+                        mLongitude = Double.toString(longitude);
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    dbLog("DB Error!", getColoredSpanned(error.getMessage(), "#cc0000"));
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 }
-            });
-        }*/
+            }
+        });
+    }
+
+    //Отправка СМС
+    private void sendSms() {
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(userBinder, null, sosMessage, null, null);
     }
 
 }
+
+

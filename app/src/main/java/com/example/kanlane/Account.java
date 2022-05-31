@@ -13,13 +13,15 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 
 public class Account extends AppCompatActivity {
 
     Button mAccountBtn;
     FirebaseAuth fAuth;
-    FirebaseFirestore fStore;
+    DatabaseReference mDatabase;
     String User_Bind;
     EditText mUser_Bind;
 
@@ -34,7 +36,7 @@ public class Account extends AppCompatActivity {
 
         //База данных
         fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
     }
 

@@ -1,60 +1,39 @@
 package com.example.kanlane;
 
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.google.firebase.auth.FirebaseAuthException;
+import com.example.kanlane.firebase.User;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.lang.reflect.Array;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
 
 public class Register extends AppCompatActivity {
+
     //Переменные
     EditText mName, mEmail, mPassword, mUserBinder;
     Button mRegisterBtn;
     TextView mLoginbtn;
     FirebaseAuth fAuth;
-    FirebaseFirestore fStore;
     DatabaseReference mDataBase;
     String currentUser;
 
     //Метод для записи пользователя в базу данных.
-    public void writeUserToDB(Object data, String currentUser){
+    public void writeUserToDB(Object data, String currentUser) {
         DatabaseReference myRef = mDataBase.child("Users/" + currentUser);
         myRef.setValue(data);
     }
@@ -63,6 +42,7 @@ public class Register extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
 
         //Для полноэкранного режима и скрывания шапки
         getSupportActionBar().hide();
@@ -78,7 +58,6 @@ public class Register extends AppCompatActivity {
 
         //Базы данных
         fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
         mDataBase = FirebaseDatabase.getInstance().getReference();
 
         if (fAuth.getCurrentUser() != null) {
@@ -123,25 +102,24 @@ public class Register extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 
-
                             //Запись нового пользователя в базу данных
                             User newUser = new User(currentUser, id, name, email, userBinder);
                             currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             writeUserToDB(newUser, currentUser);
 
-                            Toast.makeText(Register.this, "Пользователь зарегистрирован.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(Register.this, "Пользователь зарегистрирован.", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
 
                         } else {
                             Toast.makeText(Register.this, "Произошла ошибка. Повторите." +
-                                    task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                    task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
         });
 
-       //В случае, если пользователь зарегистрирован
+        //В случае, если пользователь зарегистрирован
         mLoginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,5 +128,4 @@ public class Register extends AppCompatActivity {
         });
 
     }
-
 }

@@ -11,7 +11,7 @@
     <string name="logout_btn">Выйти</string>
     <string name="login_password">Введите пароль…</string>
     <string name="forgot_password">Забыли пароль?</string>
-    <string name="user_bind">Введите почту получателя…</string>
+    <string name="user_bind">Введите номер телефона получателя…</string>
     <string name="sos_button">SOS</string>
 
 
