@@ -55,9 +55,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Запрашиваем необходимые нам разрешения
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, 100);
+        //Запрашиваем разрешения
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, 1);
 
         //Для полноэкранного режима и скрывания шапки.
         getSupportActionBar().hide();
@@ -92,25 +91,16 @@ public class MainActivity extends AppCompatActivity {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         //Кнопка SOS
-        sosMessage = email + " попал в беду!\n" + "Широта: " + mLatitude + "\n Долгота: " + mLongitude;
+        sosMessage = email + " попал в беду!";
         mSosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED) {
-                    getLocation();
-                } else {
-                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
-                }
-
-
                 if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.SEND_SMS) ==
                         PackageManager.PERMISSION_GRANTED) {
                     sendSms();
                 } else {
                     ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, 100);
                 }
-
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance()
                         .getReference().child("Sos");
                 Toast.makeText(MainActivity.this, "Сообщение отправлено!", Toast.LENGTH_SHORT).show();
@@ -130,37 +120,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //Метод для полуения текущей геолокации
-    private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
-                (this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                Location location = task.getResult();
-                if (location != null) {
-                    //Создаем GeoCoder
-                    Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
-                    try {
-                        List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),
-                                location.getLongitude(), 1);
-                        latitude = addresses.get(0).getLatitude();
-                        longitude = addresses.get(0).getLongitude();
-                        mLatitude = Double.toString(latitude);
-                        mLongitude = Double.toString(longitude);
-
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        });
-    }
 
     //Отправка СМС
     private void sendSms() {
@@ -169,5 +128,3 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
-
-
