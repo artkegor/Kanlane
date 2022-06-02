@@ -3,6 +3,7 @@ package com.example.kanlane;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -47,9 +48,8 @@ public class Login extends AppCompatActivity {
         mRegisterLoginScreen = findViewById(R.id.registerLoginscreen);
         mForgotPassword = findViewById(R.id.forgotPassword);
 
-        //Для полноэкранного режима и скрывания шапки
-        getSupportActionBar().hide();
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        Window window = this.getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.black));
 
         //Кнопка войти
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
