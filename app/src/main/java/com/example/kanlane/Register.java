@@ -91,6 +91,10 @@ public class Register extends AppCompatActivity {
                     mName.setError("Введите имя...");
                     return;
                 }
+                if (TextUtils.isEmpty(userBinder)) {
+                    mUserBinder.setError("Введите номер телефона получателя...");
+                    return;
+                }
                 if (password.length() < 8) {
                     mPassword.setError("Пароль должен состоять из 8-ми символов.");
                     return;

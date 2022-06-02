@@ -6,25 +6,29 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.util.Log;
+import android.widget.ListView;
 import android.widget.Toast;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 
 
 import com.example.kanlane.firebase.Sos;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
+import com.example.kanlane.notes.NoteEditorActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,22 +37,49 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button mAccountBtn;
     Button mSosButton;
+    Button mCreateReminder;
     FirebaseAuth fAuth;
     DatabaseReference uidRef, dataBase;
     String userBinder;
     String sosMessage;
-    FusedLocationProviderClient fusedLocationProviderClient;
-    double longitude;
-    double latitude;
-    String mLongitude, mLatitude;
+    String email;
+    ListView noteListView;
+    public static ArrayList<String> notes = new ArrayList<>();
+    public static ArrayAdapter arrayAdapter;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.add_note_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        if (item.getItemId() == R.id.add_note) {
+
+            Intent creatingNote = new Intent(getApplicationContext(), NoteEditorActivity.class);
+            startActivity(creatingNote);
+            return true;
+        }
+        if (item.getItemId() == R.id.account_settings){
+            Intent accountSettings = new Intent(getApplicationContext(), Account.class);
+            startActivity(accountSettings);
+
+            return true;
+        }
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,22 +90,79 @@ public class MainActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, 1);
 
         //Для полноэкранного режима и скрывания шапки.
-        getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
-        //Базы данных
-        mAccountBtn = findViewById(R.id.accountBtn);
+        //Получаем необходимые элементы интерфейса
         mSosButton = findViewById(R.id.sosButton);
+        noteListView = findViewById(R.id.noteListView);
+
+        //Работает!
+        Log.d("Start", "App started!");
+
+        //Напоминания
+        SharedPreferences sharedPreferences = getApplicationContext().
+                getSharedPreferences("com.example.kanlane.notes",
+                        Context.MODE_PRIVATE);
+        HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("notes", null);
+
+        if (set == null) {
+            notes.add("Пример заметки");
+        }else{
+            notes = new ArrayList(set);
+        }
+
+        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, notes);
+        noteListView.setAdapter(arrayAdapter);
+
+        noteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent noteIntent = new Intent(getApplicationContext(), NoteEditorActivity.class);
+                noteIntent.putExtra("noteId", position);
+                startActivity(noteIntent);
+            }
+        });
+
+        noteListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                new AlertDialog.Builder(MainActivity.this)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("Вы уверены?")
+                        .setMessage("Вы хотите удалить заметку?")
+                        .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                notes.remove(position);
+                                arrayAdapter.notifyDataSetChanged();
+
+                                SharedPreferences sharedPreferences = getApplicationContext().
+                                        getSharedPreferences("com.example.kanlane.notes",
+                                                Context.MODE_PRIVATE);
+                                HashSet<String> set = new HashSet(MainActivity.notes);
+                                sharedPreferences.edit().putStringSet("notes", set).apply();
+
+                            }
+                        }).setNegativeButton("Нет", null)
+                        .show();
+
+                return true;
+            }
+        });
+
 
         //Получение данных из базы данных Firebase
         fAuth = FirebaseAuth.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String email = user.getEmail();
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         dataBase = FirebaseDatabase.getInstance().getReference();
         uidRef = dataBase.child("Users/").child(uid);
+        email = user.getEmail();
 
-        //Получение из базы данных привязанный номер телефона
+
+        //Получаем из базы данных привязанный номер телефона
         uidRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -87,11 +175,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Получение текущей геолокации
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
         //Кнопка SOS
-        sosMessage = email + " попал в беду!";
+        sosMessage = "Пользователь " + email + " попал в беду!";
         mSosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,16 +195,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Кнопка настроек аккаунта (переход в Account.activity)
-        mAccountBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Account.class));
-            }
-        });
-
     }
-
 
     //Отправка СМС
     private void sendSms() {

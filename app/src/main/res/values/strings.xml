@@ -13,7 +13,11 @@
     <string name="forgot_password">Забыли пароль?</string>
     <string name="user_bind">Введите номер телефона получателя…</string>
     <string name="sos_button">SOS</string>
-
-
+    <string name="account">Аккаунт</string>
+    <string name="note_name">Название</string>
+    <string name="note_desc">Описание</string>
+    <string name="note_edit_description">Введите описание…</string>
+    <string name="note_edit_name">Введите название…</string>
+    <string name="note_save">Сохранить</string>
 
 </resources>
