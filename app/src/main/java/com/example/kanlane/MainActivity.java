@@ -12,7 +12,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.view.Menu;
@@ -20,7 +19,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -29,6 +27,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
+import com.example.kanlane.account.Account;
 import com.example.kanlane.firebase.Sos;
 import com.example.kanlane.notes.NoteEditorActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,7 +40,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity {
 

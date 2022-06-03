@@ -1,4 +1,4 @@
-package com.example.kanlane;
+package com.example.kanlane.account;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -13,6 +13,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.kanlane.Login;
+import com.example.kanlane.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -20,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class Account extends AppCompatActivity {
 
-    Button mAccountBtn;
+    Button mAccountBtn, mDeleteAcc;
     FirebaseAuth fAuth;
     DatabaseReference mDatabase;
     String User_Bind;
@@ -37,6 +39,19 @@ public class Account extends AppCompatActivity {
         //База данных
         fAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        mDeleteAcc = findViewById(R.id.delete_acc);
+
+        mDeleteAcc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent deleteIntent = new Intent(Account.this, DeleteAccount.class);
+                startActivity(deleteIntent);
+
+
+            }
+        });
+
 
     }
 

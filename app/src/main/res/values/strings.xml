@@ -19,5 +19,7 @@
     <string name="note_edit_description">Введите описание…</string>
     <string name="note_edit_name">Введите название…</string>
     <string name="note_save">Сохранить</string>
+    <string name="delete_account">Удалить аккаунт</string>
+    <string name="delete">Чтобы удалить аккаунт подтвердите, что это Вы</string>
 
 </resources>
