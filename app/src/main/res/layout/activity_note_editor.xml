@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="150dp"
     tools:context=".notes.NoteEditorActivity">
 
     <EditText
         android:id="@+id/noteEditText"
         android:layout_width="match_parent"
-        android:layout_height="283dp"
+        android:layout_height="140dp"
         android:ems="10"
         android:fontFamily="@font/roboto_bold"
         android:gravity="top|left"

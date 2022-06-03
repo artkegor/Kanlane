@@ -15,7 +15,6 @@
         android:divider="@color/dark_gray"
         android:dividerHeight="3dp" />
 
-
     <Button
         android:id="@+id/sosButton"
         android:layout_width="75dp"
