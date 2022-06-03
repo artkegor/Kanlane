@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -16,14 +15,17 @@
         android:divider="@color/dark_gray"
         android:dividerHeight="3dp" />
 
+
     <Button
         android:id="@+id/sosButton"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_marginLeft="310dp"
+        android:layout_marginLeft="280dp"
         android:layout_marginTop="550dp"
+        android:layout_marginRight="30dp"
         android:background="#ff0000"
         android:backgroundTint="#FF0000"
+        android:fontFamily="@font/roboto_bold"
         android:text="@string/sos_button"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,14 +36,17 @@
         android:id="@+id/add_note"
         android:layout_width="75dp"
         android:layout_height="75dp"
+        android:layout_marginLeft="30dp"
         android:layout_marginTop="550dp"
-        android:text="+"
-        android:textSize="34sp"
-        android:layout_marginLeft="20dp"
-
-
-
-        />
+        android:background="#ff0000"
+        android:backgroundTint="#FF0000"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/add_note_btn"
+        android:textColor="@color/white"
+        android:textSize="35sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.952"
+        tools:ignore="TextContrastCheck" />
 
 
 </RelativeLayout>

@@ -12,6 +12,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.view.Menu;
@@ -51,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     String userBinder;
     String sosMessage;
     String email;
+    String mEmail, mUserbinder;
+
     ListView noteListView;
     public static ArrayList<String> notes = new ArrayList<>();
     public static ArrayAdapter arrayAdapter;
@@ -59,18 +64,15 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.add_note_menu, menu);
-
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-
         if (item.getItemId() == R.id.account_settings) {
             Intent accountSettings = new Intent(getApplicationContext(), Account.class);
             startActivity(accountSettings);
-
             return true;
         }
         return false;
@@ -101,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                         Context.MODE_PRIVATE);
         HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("notes", null);
 
+        //Заметка-пример
         if (set == null) {
             notes.add("Пример заметки");
         } else {
@@ -139,11 +142,9 @@ public class MainActivity extends AppCompatActivity {
                                                 Context.MODE_PRIVATE);
                                 HashSet<String> set = new HashSet(MainActivity.notes);
                                 sharedPreferences.edit().putStringSet("notes", set).apply();
-
                             }
                         }).setNegativeButton("Нет", null)
                         .show();
-
                 return true;
             }
         });
@@ -157,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(creatingNote);
             }
         });
-
 
         //Получение данных из базы данных Firebase
         fAuth = FirebaseAuth.getInstance();
@@ -197,7 +197,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Сообщение отправлено!", Toast.LENGTH_SHORT).show();
                 Sos sos = new Sos(email, userBinder);
                 databaseReference.push().setValue(sos);
-
             }
         });
 
@@ -208,5 +207,4 @@ public class MainActivity extends AppCompatActivity {
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(userBinder, null, sosMessage, null, null);
     }
-
 }
