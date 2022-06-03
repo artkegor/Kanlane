@@ -12,7 +12,7 @@
     <ListView
         android:id="@+id/noteListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="493dp"
         android:divider="@color/dark_gray"
         android:dividerHeight="3dp" />
 
@@ -29,6 +29,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.952"
         tools:ignore="TextContrastCheck" />
+
+    <Button
+        android:id="@+id/add_note"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="550dp"
+        android:text="+"
+        android:textSize="34sp"
+        android:layout_marginLeft="20dp"
+
+
+
+        />
 
 
 </RelativeLayout>

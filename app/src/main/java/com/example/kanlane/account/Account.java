@@ -40,7 +40,7 @@ public class Account extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        mDeleteAcc = findViewById(R.id.delete_acc);
+        mDeleteAcc = findViewById(R.id.delete_acc_btn);
 
         mDeleteAcc.setOnClickListener(new View.OnClickListener() {
             @Override

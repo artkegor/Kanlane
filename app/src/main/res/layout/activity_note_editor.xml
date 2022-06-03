@@ -9,11 +9,10 @@
     <EditText
         android:id="@+id/noteEditText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="200dp"
+        android:layout_height="283dp"
         android:ems="10"
-        android:gravity="top|left"
         android:fontFamily="@font/roboto_bold"
+        android:gravity="top|left"
         android:inputType="textMultiLine"
         tools:ignore="SpeakableTextPresentCheck" />
 

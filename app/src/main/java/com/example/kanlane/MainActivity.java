@@ -44,7 +44,8 @@ import java.util.HashSet;
 public class MainActivity extends AppCompatActivity {
 
     Button mSosButton;
-    Button mCreateReminder;
+    Button mAddNoteButton;
+
     FirebaseAuth fAuth;
     DatabaseReference uidRef, dataBase;
     String userBinder;
@@ -66,13 +67,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
 
-        if (item.getItemId() == R.id.add_note) {
-
-            Intent creatingNote = new Intent(getApplicationContext(), NoteEditorActivity.class);
-            startActivity(creatingNote);
-            return true;
-        }
-        if (item.getItemId() == R.id.account_settings){
+        if (item.getItemId() == R.id.account_settings) {
             Intent accountSettings = new Intent(getApplicationContext(), Account.class);
             startActivity(accountSettings);
 
@@ -90,11 +85,12 @@ public class MainActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, 1);
 
         Window window = this.getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(this,R.color.black));
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.black));
 
         //Получаем необходимые элементы интерфейса
         mSosButton = findViewById(R.id.sosButton);
         noteListView = findViewById(R.id.noteListView);
+        mAddNoteButton = findViewById(R.id.add_note);
 
         //Работает!
         Log.d("Start", "App started!");
@@ -107,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (set == null) {
             notes.add("Пример заметки");
-        }else{
+        } else {
             notes = new ArrayList(set);
         }
 
@@ -149,6 +145,16 @@ public class MainActivity extends AppCompatActivity {
                         .show();
 
                 return true;
+            }
+        });
+
+
+        //Кнопка добавить напоминание
+        mAddNoteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent creatingNote = new Intent(getApplicationContext(), NoteEditorActivity.class);
+                startActivity(creatingNote);
             }
         });
 
