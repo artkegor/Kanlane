@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         //Запрашиваем разрешения
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, 1);
 
+        //Настройки окна
         Window window = this.getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.black));
 
