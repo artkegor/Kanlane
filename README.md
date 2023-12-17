@@ -1,5 +1,5 @@
 # Kanlane
-Kanlane это приложение созданное в рамках выпускного индивидуального проекта в IT Школе Samsung.
-Главная цель этого приложения - помощь пожилым людям и упрощение их жизни.
-Среди основных функций этого приложения - кнопка SOS, которая отправляет уведомление пользователю, который привязан к аккаунту Вашего родственника, а также напоминания.
-Клиент-серверная часть приложения, а также база данных работают на Google Firebase.
+Kanlane is an application created as part of a graduation individual project at the Samsung IT School.
+The main goal of this application is to make life easier for older people.
+Among the main functions of this application is an SOS button, which sends a notification to the user who is linked to your relative's account and reminders.
+The client-server part of the application, as well as the database, runs on Google Firebase.
